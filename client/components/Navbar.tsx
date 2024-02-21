@@ -20,7 +20,7 @@ export default function Navbar() {
         <Icon name="home" size={30} color="black" />
       </Pressable>
       <Pressable
-        onPress={() => navigation.navigate("City" as never)}
+        onPress={() => navigation.navigate("Favorite" as never)}
         style={styles.button}
       >
         <Icon name="star" size={30} color="black" />

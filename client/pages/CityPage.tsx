@@ -10,13 +10,15 @@ import { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ForecastMiniature from "../components/ForecastMiniature";
 import { screenHeight, screenWidth } from "../utils/screenSize";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../types/Route";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ForecastDay } from "../types/ForecastDay";
+import { handleFavorite, getFavorites } from "../utils/favorites";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type CityPageRouteProp = RouteProp<RootStackParamList, "City">;
+type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 type Props = {
   route: CityPageRouteProp;
@@ -28,32 +30,10 @@ export default function CityPage({ route }: Props) {
   const [fiveDaysForecast, setFiveDaysForecast] = useState<ForecastDay[]>([]);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleFavorite = async () => {
-    try {
-      if (isFavorite) {
-        await AsyncStorage.removeItem(cityName);
-      } else {
-        await AsyncStorage.setItem(cityName, cityName);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const getFavorites = async () => {
-    try {
-      const isAFavoriteCity = await AsyncStorage.getItem(cityName);
-      if (isAFavoriteCity !== null) {
-        setIsFavorite(true);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
+  const navigation = useNavigation<NavigationProp>();
   useEffect(() => {
     try {
-      getFavorites();
+      getFavorites(cityName, setIsFavorite);
     } catch (error) {
       console.error(error);
     }
@@ -77,6 +57,9 @@ export default function CityPage({ route }: Props) {
       >
         <View style={styles.cityPageContainer}>
           <View style={styles.cityPageHeader}>
+            <Pressable onPress={() => navigation.navigate("Home")}>
+              <Icon name="home" size={30} color="black" />
+            </Pressable>
             <View style={styles.locationAndFavoriteContainer}>
               <View style={styles.locationContainer}>
                 <Icon name="location-on" size={30} />
@@ -86,7 +69,7 @@ export default function CityPage({ route }: Props) {
                 <Pressable
                   onPress={() => {
                     setIsFavorite(!isFavorite);
-                    handleFavorite();
+                    handleFavorite(isFavorite, cityName);
                   }}
                 >
                   <Icon name={isFavorite ? "star" : "star-border"} size={50} />

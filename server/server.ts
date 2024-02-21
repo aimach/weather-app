@@ -31,7 +31,6 @@ app.get("/search/:cityName", async (req: Request, res: Response) => {
     const cities = await axios.get(
       `http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}&country=France`
     );
-    console.log();
     res.send(cities.data);
   } catch (error) {
     console.log(error);

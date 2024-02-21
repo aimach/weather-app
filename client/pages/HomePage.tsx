@@ -3,11 +3,10 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 const background = require("../assets/background.png");
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { screenHeight, screenWidth } from "../utils/screenSize";
 import FavoriteForecastContainer from "../components/FavoriteForecastContainer";
 import { ForecastDay } from "../types/ForecastDay";
+import { getFavoritesForecast } from "../utils/favorites";
 
 export interface FavoritesForecast {
   name: string;
@@ -20,26 +19,7 @@ export default function HomePage() {
   >([]);
 
   useEffect(() => {
-    const getFavorites = async () => {
-      try {
-        const keys = await AsyncStorage.getAllKeys();
-        const promises = keys.map(async (key) => {
-          const response = await axios.get(
-            `http://localhost:3000/forecast/${key}/1`
-          );
-          return {
-            name: key,
-            forecast: response.data.forecast.forecastday[0],
-          };
-        });
-        const newFavoritesForecast = await Promise.all(promises);
-        setFavoritesForecast(newFavoritesForecast);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getFavorites();
+    getFavoritesForecast(setFavoritesForecast);
   }, []);
 
   return (
@@ -50,8 +30,11 @@ export default function HomePage() {
         style={styles.background}
         imageStyle={styles.backgroundImg}
       >
-        <Header />
-        <FavoriteForecastContainer favoritesForecast={favoritesForecast} />
+        <Header type="forecast" />
+        <FavoriteForecastContainer
+          favoritesForecast={favoritesForecast}
+          page="homePage"
+        />
         <Navbar />
       </ImageBackground>
     </View>

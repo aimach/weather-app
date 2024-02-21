@@ -7,20 +7,24 @@ import { FavoritesForecast } from "../pages/HomePage";
 
 interface FavoriteForecastProps {
   favoritesForecast: FavoritesForecast[];
+  page: string;
 }
 
 export default function FavoriteForecastContainer({
   favoritesForecast,
+  page,
 }: FavoriteForecastProps) {
   return (
     favoritesForecast !== undefined && (
       <FlatGrid
         data={favoritesForecast}
-        renderItem={({ item }) => <FavoriteForecastComponent forecast={item} />}
+        renderItem={({ item }) => (
+          <FavoriteForecastComponent forecast={item} page={page} />
+        )}
         keyExtractor={(item) =>
           item.forecast.date_epoch + Math.random().toString()
         }
-        itemDimension={screenWidth / 2 - 20}
+        itemDimension={page === "homePage" ? screenWidth / 2 - 20 : screenWidth}
         style={styles.favForecastContainer}
       />
     )

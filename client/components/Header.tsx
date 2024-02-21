@@ -4,13 +4,13 @@ import { getDay, format } from "date-fns";
 import { days } from "../utils/days";
 import { fr } from "date-fns/locale";
 
-export default function Header() {
+export default function Header({ type }: { type: string }) {
   const dayOfTheWeek = days[getDay(new Date())];
   const today = format(new Date(), "dd MMMM", { locale: fr });
   return (
     <View style={styles.headerContainer}>
       <Text style={styles.title}>
-        {dayOfTheWeek} {today}
+        {type === "forecast" ? `${dayOfTheWeek} ${today}` : "Favoris"}
       </Text>
     </View>
   );

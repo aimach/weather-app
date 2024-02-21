@@ -1,8 +1,5 @@
 import { Dimensions, Text, StyleSheet, View } from "react-native";
-import { FiveDaysForecastResponse } from "../mock";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import ForecastMiniature from "../components/ForecastMiniature";
-import { FtoC } from "../utils/FtoC";
+
 import SearchBar from "../components/SearchBar";
 import Navbar from "../components/Navbar";
 
